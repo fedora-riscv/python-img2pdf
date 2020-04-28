@@ -8,22 +8,35 @@ smaller PDF files than an ImageMagick convert command.\
 The img2pdf command complements the pdfimages command.
 
 Name:           python-%{srcname}
-Version:        0.3.2
-Release:        7%{?dist}
+Version:        0.3.4
+Release:        1%{?dist}
 Summary:        Lossless images to PDF conversion library and command
 
 License:        LGPLv3+
 URL:            https://pypi.org/project/img2pdf
 Source0:        %pypi_source
-#sha256(Source0) = 28eaf39e90997979893c4e64be5b23c8fbb1122688a28df127c957388b7d9d1f
 
-Patch0:         pdf-cmp.diff
+Patch0:         verbose-test.diff
+# cf. https://gitlab.mister-muffin.de/josch/img2pdf/commit/9d184ad0cdf50987ecae7f50a1c8189dbae30aae
+Patch1:         test-magic.diff
 
 BuildArch:      noarch
 
+# required for test.sh
+BuildRequires:  ImageMagick
+BuildRequires:  ghostscript
+BuildRequires:  libtiff-tools
+BuildRequires:  mupdf
+BuildRequires:  netpbm-progs
+BuildRequires:  perl-Image-ExifTool
+BuildRequires:  poppler-utils
+BuildRequires:  python3-numpy
+BuildRequires:  python3-scipy
+# other requirements
 BuildRequires:  python3-devel
 BuildRequires:  python3-pillow
 BuildRequires:  python3-pdfrw
+
 Requires:       python3-pillow
 
 %description
@@ -44,15 +57,16 @@ Summary:        %{summary}
 sed -i '1{/^#!\//d}' src/*.py
 %py3_build
 
-
 %install
 %py3_install
 
 %check
 %{__python3} setup.py test
+bash -x test.sh
 
 %files -n python3-%{srcname}
 %{_bindir}/%{srcname}
+%{_bindir}/%{srcname}-gui
 %{python3_sitelib}/%{srcname}.py
 %{python3_sitelib}/jp2.py
 %{python3_sitelib}/__pycache__/*
@@ -61,6 +75,9 @@ sed -i '1{/^#!\//d}' src/*.py
 
 
 %changelog
+* Sun Apr 26 2020 Georg Sauthoff <mail@gms.tf> - 0.3.4-1
+- Update to latest upstream version
+
 * Thu Jan 30 2020 Fedora Release Engineering <releng@fedoraproject.org> - 0.3.2-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_32_Mass_Rebuild
 
