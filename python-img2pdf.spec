@@ -9,7 +9,7 @@ The img2pdf command complements the pdfimages command.
 
 Name:           python-%{srcname}
 Version:        0.3.4
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Lossless images to PDF conversion library and command
 
 License:        LGPLv3+
@@ -17,8 +17,12 @@ URL:            https://pypi.org/project/img2pdf
 Source0:        %pypi_source
 
 Patch0:         verbose-test.diff
+# TODO remove with next upstream version
 # cf. https://gitlab.mister-muffin.de/josch/img2pdf/commit/9d184ad0cdf50987ecae7f50a1c8189dbae30aae
 Patch1:         test-magic.diff
+# TODO remove with next upstream version
+# cf. https://gitlab.mister-muffin.de/josch/img2pdf/commit/559d42cd4aed08333145c776878c7134bba2acf9
+Patch2:         test-compress.diff
 
 BuildArch:      noarch
 
@@ -75,6 +79,9 @@ bash -x test.sh
 
 
 %changelog
+* Thu Apr 30 2020 Georg Sauthoff <mail@gms.tf> - 0.3.4-2
+- Add upstream fix for test suite failure on aarch64
+
 * Sun Apr 26 2020 Georg Sauthoff <mail@gms.tf> - 0.3.4-1
 - Update to latest upstream version
 
