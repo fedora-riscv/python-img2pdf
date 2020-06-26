@@ -9,7 +9,7 @@ The img2pdf command complements the pdfimages command.
 
 Name:           python-%{srcname}
 Version:        0.3.4
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Lossless images to PDF conversion library and command
 
 License:        LGPLv3+
@@ -36,8 +36,12 @@ BuildRequires:  perl-Image-ExifTool
 BuildRequires:  poppler-utils
 BuildRequires:  python3-numpy
 BuildRequires:  python3-scipy
+
 # other requirements
 BuildRequires:  python3-devel
+BuildRequires:  python3-setuptools
+
+
 BuildRequires:  python3-pillow
 BuildRequires:  python3-pdfrw
 
@@ -79,6 +83,10 @@ bash -x test.sh
 
 
 %changelog
+* Fri Jun 26 2020 Georg Sauthoff <mail@gms.tf> - 0.3.4-4
+- Be more explicit regarding setuptools depenency,
+  cf. https://lists.fedoraproject.org/archives/list/devel@lists.fedoraproject.org/message/GCPGM34ZGEOVUHSBGZTRYR5XKHTIJ3T7/
+
 * Tue May 26 2020 Miro Hrončok <mhroncok@redhat.com> - 0.3.4-3
 - Rebuilt for Python 3.9
 
