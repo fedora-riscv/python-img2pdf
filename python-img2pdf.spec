@@ -26,6 +26,10 @@ Patch2:         test-compress.diff
 
 BuildArch:      noarch
 
+# cf. Bug 1851638 - img2pdf fails to build on s390x because of issues in the ImageMagick dependency
+# https://bugzilla.redhat.com/show_bug.cgi?id=1851638
+ExcludeArch:    s390x
+
 # required for test.sh
 BuildRequires:  ImageMagick
 BuildRequires:  ghostscript
