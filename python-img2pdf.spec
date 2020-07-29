@@ -9,7 +9,7 @@ The img2pdf command complements the pdfimages command.
 
 Name:           python-%{srcname}
 Version:        0.3.4
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Lossless images to PDF conversion library and command
 
 License:        LGPLv3+
@@ -90,6 +90,9 @@ sed -i '1{/^#!\//d}' src/*.py
 
 
 %changelog
+* Wed Jul 29 2020 Fedora Release Engineering <releng@fedoraproject.org> - 0.3.4-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_33_Mass_Rebuild
+
 * Mon Jun 29 2020 Georg Sauthoff <mail@gms.tf> - 0.3.4-5
 - Temporarily disable some tests until next release fixes them.
 
