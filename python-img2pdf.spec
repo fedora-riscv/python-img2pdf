@@ -8,21 +8,18 @@ smaller PDF files than an ImageMagick convert command.\
 The img2pdf command complements the pdfimages command.
 
 Name:           python-%{srcname}
-Version:        0.3.4
-Release:        6%{?dist}
+Version:        0.4.0
+Release:        1%{?dist}
 Summary:        Lossless images to PDF conversion library and command
 
 License:        LGPLv3+
 URL:            https://pypi.org/project/img2pdf
 Source0:        %pypi_source
 
-Patch0:         verbose-test.diff
-# TODO remove with next upstream version
-# cf. https://gitlab.mister-muffin.de/josch/img2pdf/commit/9d184ad0cdf50987ecae7f50a1c8189dbae30aae
-Patch1:         test-magic.diff
-# TODO remove with next upstream version
-# cf. https://gitlab.mister-muffin.de/josch/img2pdf/commit/559d42cd4aed08333145c776878c7134bba2acf9
-Patch2:         test-compress.diff
+# https://sources.debian.org/data/main/i/img2pdf/0.4.0-1/debian/patches/imdepth.patch
+Patch0:         imdepth.patch
+# XXX TODO remove when upstream
+Patch1:         test-byteorder.diff
 
 BuildArch:      noarch
 
@@ -30,7 +27,8 @@ BuildArch:      noarch
 # https://bugzilla.redhat.com/show_bug.cgi?id=1851638
 ExcludeArch:    s390x
 
-# required for test.sh
+# required for tests
+BuildRequires:  python3-pytest
 BuildRequires:  ImageMagick
 BuildRequires:  ghostscript
 BuildRequires:  libtiff-tools
@@ -47,9 +45,15 @@ BuildRequires:  python3-setuptools
 
 
 BuildRequires:  python3-pillow
+# TODO will be removed in some future img2pdf release
+# cf. https://gitlab.mister-muffin.de/josch/img2pdf/issues/74#note_1037
 BuildRequires:  python3-pdfrw
+BuildRequires:  python3-pikepdf
 
-Requires:       python3-pillow
+# this is basically equivalent to adding Requires: for
+# pikepdf
+# pillow
+%{?python_enable_dependency_generator}
 
 %description
 %{desc}
@@ -73,11 +77,16 @@ sed -i '1{/^#!\//d}' src/*.py
 %py3_install
 
 %check
-%{__python3} setup.py test
 
-# Disable until test suite is more robust in next release,
-# cf. https://gitlab.mister-muffin.de/josch/img2pdf/issues/80
-#bash -x test.sh
+# since the test directly calls src/img2pdf.py
+# (file is already installed at this point)
+sed -i '1i#!'%{__python3} src/img2pdf.py
+
+# XXX TODO in next release
+sed -i 's/assert identify\[0\]\["image"\]\.get("endianess")/assert get_byteorder(identify)/' src/img2pdf_test.py
+# XXX TODO remove -k in next release
+# cf. https://gitlab.mister-muffin.de/josch/img2pdf/issues/85
+PYTHONPATH=src %{__python3} -m pytest src/img2pdf_test.py -k 'not test_png_icc and not test_tiff_ccitt_nometa2'
 
 %files -n python3-%{srcname}
 %{_bindir}/%{srcname}
@@ -90,6 +99,9 @@ sed -i '1{/^#!\//d}' src/*.py
 
 
 %changelog
+* Sun Sep 20 2020 Georg Sauthoff <mail@gms.tf> - 0.4.0-1
+- Update to latest upstream version (fixes fedora#1867007)
+
 * Wed Jul 29 2020 Fedora Release Engineering <releng@fedoraproject.org> - 0.3.4-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_33_Mass_Rebuild
 

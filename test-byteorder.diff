@@ -1,0 +1,15 @@
+--- a/src/img2pdf_test.py 11:09:08.279377606 +0200
++++ b/src/img2pdf_test.py	2020-09-20 11:15:42.996704883 +0200
+@@ -835,6 +835,12 @@
+     yield tmp_palette8_png
+     tmp_palette8_png.unlink()
+
++def get_byteorder(identify):
++    r = identify[0]["image"].get("endianess")
++    if r is None:
++       return identify[0]["image"].get("endianness")
++    return r
++
+
+ @pytest.fixture(scope="session")
+ def jpg_img(tmp_path_factory, tmp_normal_png):
