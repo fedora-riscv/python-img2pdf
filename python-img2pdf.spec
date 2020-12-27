@@ -61,7 +61,8 @@ BuildRequires:  python3-pikepdf
 # pillow
 #
 # the generator is enabled by default, since f30 or so
-#%{?python_enable_dependency_generator}
+# (replace # with % to enable it again ...)
+#{?python_enable_dependency_generator}
 
 
 
