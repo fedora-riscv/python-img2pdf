@@ -8,8 +8,8 @@ smaller PDF files than an ImageMagick convert command.\
 The img2pdf command complements the pdfimages command.
 
 Name:           python-%{srcname}
-Version:        0.4.1
-Release:        2%{?dist}
+Version:        0.4.2
+Release:        1%{?dist}
 Summary:        Lossless images to PDF conversion library and command
 
 License:        LGPLv3+
@@ -49,15 +49,11 @@ BuildRequires:  python3-pikepdf
 %endif
 
 
-# this is basically equivalent to adding Requires: for
+# The Python dependency generator is enabled by default since f30 or so.
+# It adds `Requires:` for:
+#
 # pikepdf
 # pillow
-#
-# the generator is enabled by default, since f30 or so
-# (replace # with % to enable it again ...)
-#{?python_enable_dependency_generator}
-
-
 
 %description
 %{desc}
@@ -103,9 +99,6 @@ sed -i '1i#!'%{__python3} src/img2pdf.py
 sed -i 's/endian = "endianess" if .* "endianness"/endian = "endianess" if "endianess" in  identify[0]["image"] else "endianness"/' src/img2pdf_test.py
 sed -i 's/if identify\[0\]\.get("version", "0") < "1\.0":/if False:/' src/img2pdf_test.py
 
-# cf. https://gitlab.mister-muffin.de/josch/img2pdf/issues/108
-sed -i 's/, "pdfrw"\])/])/' src/img2pdf_test.py
-
 # XXX TODO remove -k if test cases are fixed
 # See also:
 # https://gitlab.mister-muffin.de/josch/img2pdf/issues/85 for: test_png_icc, test_tiff_ccitt_nometa2
@@ -124,6 +117,9 @@ PYTHONPATH=src %{__python3} -m pytest src/img2pdf_test.py -k 'not test_png_icc a
 
 
 %changelog
+* Sat Oct 16 2021 Georg Sauthoff <mail@gms.tf> - 0.4.2-1
+- Update to latest upstream version (fixes fedora#2012933)
+
 * Fri Jul 23 2021 Fedora Release Engineering <releng@fedoraproject.org> - 0.4.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_35_Mass_Rebuild
 
