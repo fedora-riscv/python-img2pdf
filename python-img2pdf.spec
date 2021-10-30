@@ -8,7 +8,7 @@ smaller PDF files than an ImageMagick convert command.\
 The img2pdf command complements the pdfimages command.
 
 Name:           python-%{srcname}
-Version:        0.4.2
+Version:        0.4.3
 Release:        1%{?dist}
 Summary:        Lossless images to PDF conversion library and command
 
@@ -94,15 +94,8 @@ sed -i '1{/^#!\//d}' src/*.py
 # (file is already installed at this point)
 sed -i '1i#!'%{__python3} src/img2pdf.py
 
-# XXX TODO remove in next release, if fixed
-# cf. https://gitlab.mister-muffin.de/josch/img2pdf/issues/85
-sed -i 's/endian = "endianess" if .* "endianness"/endian = "endianess" if "endianess" in  identify[0]["image"] else "endianness"/' src/img2pdf_test.py
-sed -i 's/if identify\[0\]\.get("version", "0") < "1\.0":/if False:/' src/img2pdf_test.py
 
-# XXX TODO remove -k if test cases are fixed
-# See also:
-# https://gitlab.mister-muffin.de/josch/img2pdf/issues/85 for: test_png_icc, test_tiff_ccitt_nometa2
-PYTHONPATH=src %{__python3} -m pytest src/img2pdf_test.py -k 'not test_png_icc and not test_tiff_ccitt_nometa2' -v
+PYTHONPATH=src %{__python3} -m pytest src/img2pdf_test.py -v
 
 %endif
 
@@ -117,6 +110,9 @@ PYTHONPATH=src %{__python3} -m pytest src/img2pdf_test.py -k 'not test_png_icc a
 
 
 %changelog
+* Sat Oct 30 2021 Georg Sauthoff <mail@gms.tf> - 0.4.3-1
+- Update to latest upstream version (fixes fedora#2016838)
+
 * Sat Oct 16 2021 Georg Sauthoff <mail@gms.tf> - 0.4.2-1
 - Update to latest upstream version (fixes fedora#2012933)
 
