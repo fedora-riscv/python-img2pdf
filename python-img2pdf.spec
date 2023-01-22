@@ -9,7 +9,7 @@ The img2pdf command complements the pdfimages command.
 
 Name:           python-%{srcname}
 Version:        0.4.4
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Lossless images to PDF conversion library and command
 
 License:        LGPLv3+
@@ -23,6 +23,9 @@ BuildArch:      noarch
 # cf. Bug 1851638 - img2pdf fails to build on s390x because of issues in the ImageMagick dependency
 # https://bugzilla.redhat.com/show_bug.cgi?id=1851638
 ExcludeArch:    s390x
+# cf. img2pdf testsuite fails on PPC64LE
+# https://bugzilla.redhat.com/show_bug.cgi?id=2162999
+ExcludeArch:    ppc64le
 
 # Disable tests on EPEL8 for now, since some of the dependencies aren't available
 %if 0%{?epel} == 0
@@ -112,6 +115,9 @@ PYTHONPATH=src %{__python3} -m pytest src/img2pdf_test.py -v -k 'not jpg_cmyk an
 
 
 %changelog
+* Sun Jan 22 2023 Georg Sauthoff <mail@gms.tf> - 0.4.4-6
+- Exclude ppc64le due to failing test cases.
+
 * Sun Jan 22 2023 Georg Sauthoff <mail@gms.tf> - 0.4.4-5
 - Skip more test cases on rawhide.
 
