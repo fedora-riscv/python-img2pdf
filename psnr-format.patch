@@ -1,0 +1,20 @@
+--- a/src/img2pdf_test.py	2023-01-22 18:36:32.208977359 +0100
++++ b/src/img2pdf_test.py	2023-01-22 18:39:52.918531386 +0100
+@@ -345,7 +345,7 @@
+             stderr=subprocess.PIPE,
+         ).stderr
+         assert psnr != b"0"
+-        psnr = float(psnr.strip(b"0"))
++        psnr = float(psnr.split()[0])
+         assert psnr != 0  # or otherwise we would use the exact variant
+         assert psnr > 50
+ 
+@@ -501,7 +501,7 @@
+                 stderr=subprocess.PIPE,
+             ).stderr
+         assert psnr != b"0"
+-        psnr = float(psnr.strip(b"0"))
++        psnr = float(psnr.split()[0])
+         assert psnr != 0  # or otherwise we would use the exact variant
+         assert psnr > 50
+     (tmpdir / "images-000.png").unlink()

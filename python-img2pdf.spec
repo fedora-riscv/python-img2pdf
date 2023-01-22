@@ -9,12 +9,13 @@ The img2pdf command complements the pdfimages command.
 
 Name:           python-%{srcname}
 Version:        0.4.4
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Lossless images to PDF conversion library and command
 
 License:        LGPLv3+
 URL:            https://pypi.org/project/img2pdf
 Source0:        %pypi_source
+Patch0:         psnr-format.patch
 
 
 BuildArch:      noarch
@@ -94,11 +95,9 @@ sed -i '1{/^#!\//d}' src/*.py
 # (file is already installed at this point)
 sed -i '1i#!'%{__python3} src/img2pdf.py
 
-
-# disable 4 animation related test cases until upstream issue is fixed:
-# cf. https://gitlab.mister-muffin.de/josch/img2pdf/issues/130
+# cf. https://gitlab.mister-muffin.de/josch/img2pdf/issues/152
 # XXX TODO enable again after issue is resolved
-PYTHONPATH=src %{__python3} -m pytest src/img2pdf_test.py -v -k 'not animation'
+PYTHONPATH=src %{__python3} -m pytest src/img2pdf_test.py -v -k 'not jpg_cmyk and not png_gray16[ and not tiff_cmyk8'
 
 %endif
 
@@ -113,6 +112,9 @@ PYTHONPATH=src %{__python3} -m pytest src/img2pdf_test.py -v -k 'not animation'
 
 
 %changelog
+* Sun Jan 22 2023 Georg Sauthoff <mail@gms.tf> - 0.4.4-4
+- Skip some test cases due to updated dependencies until upstream fix.
+
 * Fri Jan 20 2023 Fedora Release Engineering <releng@fedoraproject.org> - 0.4.4-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_38_Mass_Rebuild
 
